@@ -1,0 +1,51 @@
+import yfinance as yf
+import pandas as pd
+import numpy as np
+
+# Fetch historical data for NVIDIA
+ticker = 'NVDA'
+start_date = '2024-01-01'
+end_date = '2025-03-23'
+data = yf.download(ticker, start=start_date, end=end_date)
+
+# Display the first few rows
+print(data.tail())
+
+from statsmodels.tsa.stattools import adfuller
+
+# Extract closing prices
+close_prices = data['Close']
+
+# Check for stationarity
+result = adfuller(close_prices.dropna())
+print(f'ADF Statistic: {result[0]}')
+print(f'p-value: {result[1]}')
+
+# If non-stationary, apply differencing
+if result[1] > 0.05:
+    close_prices_diff = close_prices.diff().dropna()
+else:
+    close_prices_diff = close_prices
+
+from statsmodels.tsa.arima.model import ARIMA
+import warnings
+warnings.filterwarnings('ignore')
+
+# Fit ARIMA model
+model = ARIMA(close_prices_diff, order=(1, 1, 1))
+model_fit = model.fit()
+
+# Model summary
+print(model_fit.summary())
+
+# Forecast the next 5 days
+forecast_steps = 3
+forecast = model_fit.forecast(steps=forecast_steps)
+
+# Generate forecast dates
+forecast_dates = pd.date_range(start='2025-03-16', periods=forecast_steps, freq='B')
+
+# Create a DataFrame for the forecast
+forecast_df = pd.DataFrame({'Date': forecast_dates, 'Forecasted_Close': forecast})
+forecast_df.set_index('Date', inplace=True)
+print(forecast_df)
