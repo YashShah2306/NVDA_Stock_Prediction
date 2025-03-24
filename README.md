@@ -1,5 +1,11 @@
 # NVDA Stock Price Prediction
 
+### Group KDDM 6
+### Members -
+### Abdurrahman Mohamed Salim Ansari
+### Sahil Ketkar
+### Yash Shah
+
 ## Overview
 This project aims to predict the stock price of NVIDIA (NVDA) for the period of March 24 to 28 using historical stock data. The prediction is carried out using the **Yahoo Finance API** to fetch stock data and the **ARIMA (AutoRegressive Integrated Moving Average)** model for time series forecasting.
 
@@ -25,4 +31,4 @@ pip install yfinance pandas numpy statsmodels matplotlib
    ```
 2. Run the script:
    ```bash
-   python predict_nvda.py
+   python NVDA_Stock_Predictor.ipynb
